@@ -1,10 +1,7 @@
 package k.grosul.savefromhackers;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.stream.Stream;
 
 
@@ -15,7 +12,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-
     private String name = "";
 
     private String birth = "";
@@ -25,6 +21,7 @@ public class User {
     private String passportGiven = "";
 
     private String passportRegistration = "";
+
 
     public User() {
     }
@@ -85,21 +82,25 @@ public class User {
         this.passportRegistration = passportRegistration;
     }
 
-    public Stream<String> allFields() {
+    public boolean isRoot() {
+        return allFields().allMatch(str -> str.equals("root"));
+    }
+
+    public boolean isFull() {
+        return allFields().noneMatch(String::isBlank);
+    }
+
+    private Stream<String> allFields() {
         return Stream.of(name,
                 birth,
                 passportGiven,
                 passportNumber,
                 passportRegistration);
     }
-    public boolean isRoot() {
-        return allFields().allMatch(str -> str.equals("root"));
-    }
 
-    public boolean isFull() {
-        return allFields().noneMatch(str -> str.equals(""));
+    public UserDto toDto() {
+        return new UserDto(name, birth, passportNumber, passportGiven, passportRegistration);
     }
-
 }
 
 

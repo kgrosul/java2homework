@@ -11,11 +11,10 @@ import com.vaadin.flow.router.RouterLink;
 @Route
 public class ClientsView extends VerticalLayout {
     
-    private final transient UserRepository repo;
-    private final Grid<User> allUsers = new Grid<>(User.class);
+    private final UserAPI api = new UserAPI();
+    private final Grid<UserDto> allUsers = new Grid<>(UserDto.class);
     
     public ClientsView(UserRepository repo) {
-        this.repo = repo;
         H1 heading = new H1("Клиенты");
         Button update = new Button(VaadinIcon.REFRESH.create());
         RouterLink orderView = new RouterLink("Назад", MainView.class);
@@ -28,14 +27,6 @@ public class ClientsView extends VerticalLayout {
                 "passportGiven",
                 "passportRegistration"
         );
-        allUsers.addComponentColumn(order -> {
-            Button deleteBtn = new Button(VaadinIcon.TRASH.create());
-            deleteBtn.addClickListener(e -> {
-                repo.delete(order);
-                setAll();
-            });
-            return deleteBtn;
-        });
         setAll();
         
         update.addClickListener(e -> setAll());
@@ -43,7 +34,7 @@ public class ClientsView extends VerticalLayout {
     }
 
     public void setAll() {
-        allUsers.setItems(repo.findAll());
+        allUsers.setItems(api.getAll());
     }
     
 }

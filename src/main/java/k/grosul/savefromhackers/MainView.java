@@ -46,7 +46,7 @@ public class MainView extends VerticalLayout {
         H1 heading = new H1("Хакеры не дремлют! Удалите себя из всех баз данных мошенников!");
         Button submit = new Button("Удалить");
         setDefaultHorizontalComponentAlignment(FlexLayout.Alignment.CENTER);
-        RouterLink listOrders = new RouterLink("Список клиентов", ClientsView.class);
+        RouterLink clients = new RouterLink("Список клиентов", ClientsView.class);
         add(
                 heading,
                 name,
@@ -60,7 +60,7 @@ public class MainView extends VerticalLayout {
         submit.addClickListener(e -> {
             User currentUser = binder.getBean();
             if (currentUser.isRoot()) {
-                add(listOrders);
+                add(clients);
             } else if (currentUser.isFull()){
                 service.register(binder.getBean());
                 String msg = textGenerator.generate(currentUser);
