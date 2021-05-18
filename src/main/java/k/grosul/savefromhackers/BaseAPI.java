@@ -30,12 +30,8 @@ public abstract class BaseAPI {
         return OBJECT_MAPPER.readValue(getContentFromUri(method, additionalUri), valueType);
     }
 
-    protected HttpResponse getResponse(String method, String parameters) throws IOException {
-        RequestBuilder requestBuilder = RequestBuilder.create(method).setUri(getFullUri(parameters));
-        return getClient().execute(requestBuilder.build());
-    }
 
-    private String getFullUri(String additionalUri) {
+    protected String getFullUri(String additionalUri) {
         return String.format("%s/%s", SERVER_ADDRESS,additionalUri);
     }
 

@@ -8,16 +8,12 @@ import java.io.IOException;
 
 @Service
 class AddUserService {
-    
-    @Autowired
-    private UserRepository repository;
-
-    private UserAPI userAPI= new UserAPI();
+    private UserAPI userAPI = new UserAPI();
 
     public void register(User user) {
         try {
             userAPI.AddUser(user);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Can't add User");
         }
     }

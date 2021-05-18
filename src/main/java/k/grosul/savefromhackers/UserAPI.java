@@ -1,11 +1,18 @@
 package k.grosul.savefromhackers;
 
+import ch.qos.logback.core.net.server.Client;
 import com.fasterxml.jackson.databind.JavaType;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -18,24 +25,27 @@ public final class UserAPI extends BaseAPI {
     public List<UserDto> getAll() {
         JavaType userList = OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, UserDto.class);
         try {
-            return getResponse(HttpGet.METHOD_NAME, "allUsers", userList, List.of());
+            return getResponse(HttpGet.METHOD_NAME, "user", userList, List.of());
         } catch (IOException e) {
             return new LinkedList<>();
         }
     }
 
-    public void AddUser(User user) throws IOException{
-        String parameters = String.format("addUser?name=%s&" +
-                        "birth=%s&" +
-                        "passportNumber=%s&" +
-                        "passportGiven=%s&" +
-                        "passportRegistration=%s",
-                user.getName().strip().replace(' ', '$'),
-                user.getBirth().strip().replace(' ', '$'),
-                user.getPassportNumber().strip().replace(' ', '$'),
-                user.getPassportGiven().strip().replace(' ', '$'),
-                user.getPassportRegistration().strip().replace(' ', '$'));
-        getResponse(HttpGet.METHOD_NAME, parameters);
+    public void AddUser(User user) throws IOException, JSONException {
+        var body = new JSONObject();
+        body.put("name", user.getName());
+        body.put("birth", user.getBirth());
+        body.put("passportNumber", user.getPassportNumber());
+        body.put("passportGiven", user.getPassportGiven());
+        body.put("passportRegistration", user.getPassportRegistration());
+
+        var request = new HttpPost(getFullUri("user"));
+        request.setEntity(new StringEntity(body.toString()));
+        request.setHeader("Accept", "application/json");
+        request.addHeader("Content-type", "application/json");
+
+        getClient().execute(request);
+
     }
 
 

@@ -26,6 +26,15 @@ public class User {
     public User() {
     }
 
+    public User(UserDto userDto) {
+        this.name = userDto.getName();
+        this.birth = userDto.getBirth();
+        this.passportNumber = userDto.getPassportNumber();
+        this.passportGiven = userDto.getPassportGiven();
+        this.passportRegistration = userDto.getPassportRegistration();
+
+    }
+
     public User(String name, String birth, String passportNumber, String passportGiven, String passportRegistration) {
         this.name = name;
         this.birth = birth;
